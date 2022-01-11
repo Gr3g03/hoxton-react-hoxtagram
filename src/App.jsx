@@ -45,6 +45,18 @@ function App() {
       })
   }
 
+  function deletePost(image) {
+    return fetch(`http://localhost:3000/images/${image.id}`, {
+      method: "DELETE"
+    }).then(() => {
+
+      const updatedImage = JSON.parse(JSON.stringify(images))
+      const match = updatedImage.find((targetImage) => targetImage.id === image.id)
+      match.comments = match.comments.filter(targetPost => targetPost.id !== image.id)
+      setImages(updatedImage)
+    })
+  }
+
   function deleteComment(comment) {
     return fetch(`http://localhost:3000/comments/${comment.id}`, {
       method: "DELETE"
@@ -68,14 +80,19 @@ function App() {
         title: title
       })
     }).then(resp => resp.json())
-      .then(function (newData) {
-        const update = JSON.parse(JSON.stringify(images))
-        const match = update.filter((target) => target.id === image)
-        match.push(newData)
-        setImages(update)
-
+      .then((newpost) => {
+        let updateImages = JSON.parse(JSON.stringify(images));
+        updateImages.push({
+          id: newpost.id,
+          image: image,
+          title: title,
+          likes: 0,
+          comments: []
+        });
+        setImages(updateImages);
       })
   }
+
   return (
     <div className="App">
       <img className="logo" src="assets/hoxtagram-logo.png" />
@@ -86,9 +103,11 @@ function App() {
           onSubmit={e => {
             e.preventDefault()
             const img = e.target.url.value
-            const title = e.target.title.value
-            addNewPost(img, title)
+            const titleEL = e.target.title.value
+            addNewPost(img, titleEL)
+            e.target.reset();
           }}
+        // }}
         >
           <input type='text' placeholder='title' name='title' />
           <input type='text' placeholder='url' name='url' />
@@ -105,6 +124,7 @@ function App() {
             getLikes={getLikes}
             createComment={createComment}
             deleteComment={deleteComment}
+            deletePost={deletePost}
           />
         ))}
 

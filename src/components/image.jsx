@@ -4,6 +4,7 @@ export default function Image(props) {
             <h2 className="title" >{props.image.title}</h2>
             <img src={props.image.image} className="image" />
             <button onClick={() => {
+                props.deletePost(props.image)
             }} >x</button>
             <div className="likes-section">
                 <span className="likes">{props.image.likes}</span>
