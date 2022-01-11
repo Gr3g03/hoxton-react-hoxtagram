@@ -68,13 +68,13 @@ function App() {
         title: title
       })
     }).then(resp => resp.json())
+      .then(function (newData) {
+        const update = JSON.parse(JSON.stringify(images))
+        const match = update.filter((target) => target.id === image)
+        match.push(newData)
+        setImages(update)
 
-    const newPost = JSON.parse(JSON.stringify(images))
-    const match = newPost.map((target) => target.id === image.id)
-    match.image.push(newPost)
-    match.title.push(newPost)
-
-    setImages(newPost)
+      })
   }
   return (
     <div className="App">
@@ -88,7 +88,6 @@ function App() {
             const img = e.target.url.value
             const title = e.target.title.value
             addNewPost(img, title)
-            e.target.reset()
           }}
         >
           <input type='text' placeholder='title' name='title' />
