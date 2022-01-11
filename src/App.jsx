@@ -27,26 +27,68 @@ function App() {
   }
 
   function createComment(imageId, content) {
-    fetch(`http://localhost:3000/comments`, {
-      method: 'POST',
+    return fetch("http://localhost:3000/comments", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         imageId: imageId,
         content: content
       })
+    }).then(resp => resp.json())
+      .then((newComment) => {
+        const updatedComment = JSON.parse(JSON.stringify(images))
+        const match = updatedComment.find((target) => target.id === imageId)
+        match.comments.push(newComment)
+        setImages(updatedComment)
+      })
+
+  }
+
+  function deleteComment(comment) {
+    return fetch(`http://localhost:3000/comments/${comment.id}`, {
+      method: "DELETE"
+    }).then(() => {
+
+      const updatedImage = JSON.parse(JSON.stringify(images))
+      const match = updatedImage.find((targetImage) => targetImage.id === comment.imageId)
+      match.comments = match.comments.filter(targetComment => targetComment.id !== comment.id)
+      setImages(updatedImage)
     })
+  }
 
-    const updatedComments = JSON.parse(JSON.stringify(images))
-    const match = updatedComments.find(target => target === imageId)
+  function deletePost(image) {
+    return fetch(`http://localhost:3000/comments/${image.id}`, {
+      method: "DELETE"
+    }).then(() => {
 
-    setImages(updatedComments)
+      const updatedImage = JSON.parse(JSON.stringify(images))
+      const match = updatedImage.find((targetImage) => targetImage.id === image.imageId)
+      match.comments = match.comments.filter(targetComment => targetComment.id !== image.id)
+      setImages(updatedImage)
+    })
   }
 
   return (
     <div className="App">
       <img className="logo" src="assets/hoxtagram-logo.png" />
+
+      <div>
+        <h2>Add an image</h2>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            console.log('title: ', e.target.title.value)
+            console.log('url:', e.target.url.value)
+            e.target.reset()
+          }}
+        >
+          <input type='text' placeholder='title' name='title' />
+          <input type='text' placeholder='url' name='url' />
+          <button>ADD IMAGE</button>
+        </form>
+      </div>
 
       <section className="image-container">
 
@@ -56,6 +98,7 @@ function App() {
             image={image}
             getLikes={getLikes}
             createComment={createComment}
+            deleteComment={deleteComment}
           />
         ))}
 

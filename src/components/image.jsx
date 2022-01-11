@@ -11,9 +11,29 @@ export default function Image(props) {
             </div>
             <ul className="comments">
                 {props.image.comments.map(comment =>
-                    <li key={comment.id}>{comment.content}</li>)}
+                    <li key={comment.id}>{comment.content}
+                        <button className="delete-button"
+                            onClick={() => {
+                                props.deleteComment(comment)
+                            }}
+                        >X</button>
+                    </li>)}
+                <form className="comment-form" onSubmit={function (e) {
+                    e.preventDefault()
+                    const content = e.target.comment.value
+                    props.createComment(props.image.id, content)
+                    e.target.reset()
+
+                }}>
+                    <input type="text"
+                        name="comment"
+                        className="comment-input"
+                        placeholder="Add a comment"
+                    />
+                    <button className="comment-button" type="submit">ADD</button>
+                </form>
 
             </ul>
-        </article>
+        </article >
     )
 }
