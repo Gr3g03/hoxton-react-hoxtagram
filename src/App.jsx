@@ -43,7 +43,6 @@ function App() {
         match.comments.push(newComment)
         setImages(updatedComment)
       })
-
   }
 
   function deleteComment(comment) {
@@ -58,18 +57,25 @@ function App() {
     })
   }
 
-  function deletePost(image) {
-    return fetch(`http://localhost:3000/comments/${image.id}`, {
-      method: "DELETE"
-    }).then(() => {
+  function addNewPost(image, title) {
+    fetch(`http://localhost:3000/images`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application.json'
+      },
+      body: JSON.stringify({
+        image: image,
+        title: title
+      })
+    }).then(resp => resp.json())
 
-      const updatedImage = JSON.parse(JSON.stringify(images))
-      const match = updatedImage.find((targetImage) => targetImage.id === image.imageId)
-      match.comments = match.comments.filter(targetComment => targetComment.id !== image.id)
-      setImages(updatedImage)
-    })
+    const newPost = JSON.parse(JSON.stringify(images))
+    const match = newPost.map((target) => target.id === image.id)
+    match.image.push(newPost)
+    match.title.push(newPost)
+
+    setImages(newPost)
   }
-
   return (
     <div className="App">
       <img className="logo" src="assets/hoxtagram-logo.png" />
@@ -79,8 +85,9 @@ function App() {
         <form
           onSubmit={e => {
             e.preventDefault()
-            console.log('title: ', e.target.title.value)
-            console.log('url:', e.target.url.value)
+            const img = e.target.url.value
+            const title = e.target.title.value
+            addNewPost(img, title)
             e.target.reset()
           }}
         >

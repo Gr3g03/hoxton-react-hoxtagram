@@ -3,6 +3,8 @@ export default function Image(props) {
         <article className="image-card">
             <h2 className="title" >{props.image.title}</h2>
             <img src={props.image.image} className="image" />
+            <button onClick={() => {
+            }} >x</button>
             <div className="likes-section">
                 <span className="likes">{props.image.likes}</span>
                 <button className="like-button" onClick={() => {
