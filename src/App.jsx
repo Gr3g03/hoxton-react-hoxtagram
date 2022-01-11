@@ -26,6 +26,24 @@ function App() {
     setImages(updatedState)
   }
 
+  function createComment(imageId, content) {
+    fetch(`http://localhost:3000/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        imageId: imageId,
+        content: content
+      })
+    })
+
+    const updatedComments = JSON.parse(JSON.stringify(images))
+    const match = updatedComments.find(target => target === imageId)
+
+    setImages(updatedComments)
+  }
+
   return (
     <div className="App">
       <img className="logo" src="assets/hoxtagram-logo.png" />
@@ -37,6 +55,7 @@ function App() {
             key={image.id}
             image={image}
             getLikes={getLikes}
+            createComment={createComment}
           />
         ))}
 
