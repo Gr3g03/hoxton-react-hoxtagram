@@ -12,6 +12,7 @@ export default function Image(props) {
             <ul className="comments">
                 {props.image.comments.map(comment =>
                     <li key={comment.id}>{comment.content}</li>)}
+
             </ul>
         </article>
     )
