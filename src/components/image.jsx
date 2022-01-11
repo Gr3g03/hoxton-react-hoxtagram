@@ -5,7 +5,9 @@ export default function Image(props) {
             <img src={props.image.image} className="image" />
             <div className="likes-section">
                 <span className="likes">{props.image.likes}</span>
-                <button className="like-button">♥</button>
+                <button className="like-button" onClick={() => {
+                    props.getLikes(props.image)
+                }}>♥</button>
             </div>
             <ul className="comments">
                 {props.image.comments.map(comment =>
